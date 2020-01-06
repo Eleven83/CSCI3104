@@ -1,0 +1,102 @@
+\documentclass{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb,geometry}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{ulem}
+\usepackage{listings}
+
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{document}
+
+CSCI 3104-300 Summer 2019 \hfill Problem Set 6 \\
+Hoffman, Ryan \\
+01/11
+
+\hrulefill
+
+\vspace{-3mm}
+\begin{enumerate}
+    \item (15 points) Give an $O(VE)$-time algorithm for computing the transitive closure of a directed graph $G=(V,E)$.  
+    Compute its asymptotic running time.\par
+    \textbf{Solution:}\par
+    Run a single-source shortest path algorithm from each of the \textit(V) vertices in the graph. Here, we use \textit(BFS) $|V|$ times, giving us
+    $O(VE)$-time. In the worst-case we iterate through the entire set of edges. BFS has $O(V+E)$-time.\par
+    I REALLY wanted to write pseudocode for this problem but I can't figure out how to do it correctly\dots But here is my attempt:\par
+    \begin{algorithm}
+        \caption{}
+        \begin{algorithmic}[1]
+        \State transClosure($G$):
+            \State Initialization of matrix  
+            \For{each vertex $u \in V$}:
+                \State run $BFS(u)$
+                \For{each vertex $v$}:
+                \State add element to the matrix
+                \EndFor
+            \State return the matrix    
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
+    \pagebreak
+    
+	\item (15 points) Grog --master of pictures-- needs your help to compute the in- and out-degrees of all vertices in a directed multigraph $G$. However, he is not sure how to represent the graph so that the calculation is most efficient. For each of the three possible representations, express your answers in asymptotic notation (the only notation Grog understands), in terms of $V$ and $E$, and justify your claim.
+	\begin{enumerate}
+	\item An \textit{adjacency matrix} representation. Assume the size of the matrix is known.\par
+    \textbf{Solution:}\par
+        Instead of storing a $1$ or a $0$ in the adjacency matrix, it would be best to store the key to a Hash table 
+        in which the corresponding edge list can be found. In this way, we still have the matrix of size $|V|$by $|V|$ which 
+        requires $O(V^2)$-time.
+	\item An \textit{edge list} representation. Assume vertices have arbitrary labels.\par
+    \textbf{Solution:}\par
+        From our notes, since an edge list only stores the set of edges in $E$, the set of vertices will also need to be traversed. 
+        This gives us $O(VE)$-time complexity. 
+    \item An \textit{adjacency list} representation. Assume the vector's length is known.\par
+    \textbf{Solution:}\par
+        The adjacency list representation stores a vector of length $n$ vertices. Each element (vertex) points to a linked list
+        which we then take the size as the out-degree for that vertex. To perform a linear search we know that the time complexity 
+        will be $O(V)$. 
+    \end{enumerate}
+	
+	\pagebreak
+    
+    \item (40 points) Consider a valleyed array $A[1, 2, \ldots, n]$ with the property that the subarray $A[1\ldots i]$ has the property that $A[j] > A[j + 1]$ for $1 \leq j < i$, and the subarray $A[i \ldots n]$ has the property that $A[j] < A[j + 1]$ for $i \leq j < n$. For example, \newline $A = [16, 15, 10, 9, 7, 3, 6, 8, 17, 23]$ is a valleyed array.
+    
+    \begin{enumerate}
+        \item Write a recursive algorithm that takes asymptotically sub-linear time to find the minimum element of $A$.\par
+        \textbf{Solution:}\par
+            A \textit{sub-linear}-time algorithm would be something like $log(n)$ or $n^c$ for $c<1$. I don't know how to do all the fancy stuff
+            like making a recurrence relation but I know that to get this to be sub-linear we need to simply take, as input, less than $n$
+            items. Now, since the valleyed array we are given is basically just two sorted arrays (decreasing and increasing), we can find the minimum
+            element in the middle of the list. 
+
+        \item Prove that your algorithm is correct. (Hint: prove that your algorithm's correctness follows from the correctness of another correct algorithm we already know.)\par
+        \textbf{Solution:}\par
+            Similar to \textit{Quicksort}, which has $O(nlogn)$ running time, the above would simply use less than $n$ elements giving us 
+            our expected sub-linear running time.
+
+        \item Now consider the multi-valleyed generalization, in which the array contains $k$ valleys, i.e., it contains $k$ subarrays, each of which is itself a valleyed array. Let $k = 2$ and prove that your algorithm can fail on such an input.\par
+        \textbf{Solution:}\par
+            Well, my algorithm fails because it divides the array into two pieces essentially. Therefore we don't need any information about
+            the second half of the array. Now though, we are looking at a wave array I believe, with multiple peaks and valleys.
+
+        \item Suppose that $k = 2$ and we can guarantee that neither valley is closer than $n/4$ positions to the middle of the array, and that the "joining point" of the two singly valleyed subarrays lays in the middle half of the array. Now write an algorithm that returns the minimum element of $A$ in sublinear time. Prove that your algorithm is correct, give a recurrence relation for its running time, and solve for its asymptotic behavior.\par
+        \textbf{Solution:}\par
+            Like I stated above, I can't "prove" that my algorithm is correct or give a recurrence relation for its running time 
+            and solve for its asymptotic behavior but, I know it still holds true because it makes sense to me that if we start in 
+            the middle, the closest valley is $n/4$ positions away. 
+    \end{enumerate}
+\end{enumerate}
+\end{document}

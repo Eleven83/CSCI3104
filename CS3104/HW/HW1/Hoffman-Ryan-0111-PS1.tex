@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb,graphicx,listings}
+
+
+\begin{document}
+
+CSCI 3104-300 Summer 2019 \hfill Problem Set 1 \\
+Hoffman, Ryan \\
+01/11
+
+\hrulefill
+
+\begin{enumerate}
+
+	\item	\textit{(5 points) Give an example of an application that uses a proprietary algorithm (i.e.
+	Spotify's "Discover Weekly" playlist, Google's PageRank algorithm, etc.). Find an
+	article that discusses this algorithm and give a summary of its content. Provide at
+	least 4-5 sentences for full credit.}
+
+	Response: Zillow's Zestimate. As a former Realtor, I was always fascinated by the website, Zillow, and their method 
+	of providing free, no-hassle valuations of homes to anyone interested. One article I found discussing 
+	this algorithm is titled \textit{"Zillow aims to provide instant valuations of homes; *Zillow claims to cure real estate info problem."}
+	by Mark Gibbs. Gibbs writes "After you enter the address of a house, Zillow applies an algorithm that uses what its statisticians call 'a proprietary algorithm' -big words 
+	for 'secret formula.' The result is what Zillow whimsically calls a 'Zestimate'."
+	
+	Citation: 
+	Zillow aims to provide instant valuation of homes; Zillow claims to cure real estate info
+	problem
+	by Gibbs, Mark
+	Network World, 03/2006
+	
+	\newpage
+	
+	\item (15 points) Consider two algorithms that perform the same function, that run in  $n/4$ and $log_{2}(n)$, respectively, where $n \in \mathbb{N}$ (i.e. natural numbers). $n$ represents the input size and $n/4$ and $log_{2}(n)$ represent runtimes with respect to the input size.
+
+	\begin{enumerate}
+
+	\item \label{stocks:a} Plot these runtimes on the same graph with the values $n \in [1,50]$ (don't forget labels). Provide the set of intervals over $\mathbb{N}$, where $n/4$ is the strictly better algorithm to use (think greater than, not greater than or equal).
+	
+	\end{enumerate}
+
+	Solution:
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[height=0.3\linewidth,width=.75\textwidth]{plot1.png}
+		\caption{Comparing two functions}
+	\end{figure}
+
+	\newpage
+
+	\item (15 points) Harry the Wizard needs your help solving a riddle deep in an abandoned dwarven mine. There are two doors marked A and B, respectively, and a stone pedestal in the middle of the room inscribed with the following text:
+
+    \scriptsize
+
+    "The dwarves who dwelled in  this mine were fond of mathematical drinking games. Two dwarves, Arnold and Barry, are chosen as the participants for this game, and pick functions that they think will best predict the number of people who enter the pub in an hour (\textit{p}) based on the number of drinks they consume in that hour (\textit{d}). They choose $p(d) = d/2$ and $p(d)= 2ln(d)$, respectively. Below is a record of the number of drinks consumed and the corresponding number of patrons patrons who entered the bar over four hours.
+
+    \begin{center}
+        \begin{tabular}{|c | c |}
+        \hline
+        Number Drinks (\textit{d}) & Number Patrons (\textit{p})\\ \hline
+        5 & 4  \\ \hline
+        10 & 10  \\ \hline
+        15 & 4  \\ \hline
+        20 & 8  \\ \hline
+
+        \end{tabular}
+    \end{center}
+
+    Which dwarf, Arnold or Barry, chose the most accurate function?"
+
+    \normalsize
+    Due to an error in Harry's mental calculations in the last puzzle causing Grog the Barbian to lose his pinky finger, the party demands  a written explanation of the solution to the puzzle. Additionally, since Grog doesn't know how to read, provide a relevant figure in your solution so Grog can believe he is part of the discussion.
+
+	Solution:\\
+	For this question, I chose Arnold as the dwarf with the most accurate function.\\
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[height=0.3\linewidth,width=.75\textwidth]{plot2.png}
+		\caption{Comparing Arnold(Red) and Barry(Blue)}
+	\end{figure} 
+	
+	\newpage
+
+	\item (10 points) Consider the following recurrence relation:
+	\[
+	G_n =
+		 \begin{cases}
+		   \text{1} &\quad\text{if \textit{n} = 0}\\
+		   \text{-1} &\quad\text{if \textit{n} = 1}\\
+		   \text{2} &\quad\text{if \textit{n} = 2}\\
+		   \text{($G_{n-1}$)($G_{n-2}$)+$G_{n-3}$} &\quad\text{otherwise}\\
+		 \end{cases}
+	\]
+	
+		 \begin{enumerate}
+		 \item Write pseudocode for this function that takes in a positive integer, \textit{n}, and returns the \textit{n}th number in the sequence.
+		 
+		 Solution:\\
+\begin{lstlisting} 
+def myFunc(n):  
+	someArray = [0, 1] 
+	while len(someArray) < n + 1: 
+		someArray.append(0) 
+	if n <= 1: 
+		return n 
+	else: 
+		if someArray[n - 1] == 0: 
+			someArray[n - 1] = myFunc(n - 1) 	
+		if someArray[n - 2] == 0: 
+			someArray[n - 2] = myFunc(n - 2) 
+	someArray[n] = someArray[n - 2] + someArray[n - 1] 
+	return someArray[n] 
+		
+print(myFunc(10)) 
+
+\end{lstlisting}
+		 \item What is the 10th number in the sequence?\\
+		Solution:\\
+		myFunc(10) = 55
+		 \end{enumerate}
+	
+	\end{enumerate}
+	
+	\end{document}	

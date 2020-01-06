@@ -1,0 +1,517 @@
+\documentclass[11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{fullpage}
+
+\newtheorem{exercise}{Exercise}
+\newtheorem{solution}{Solution}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+\title{{\bf Growth of Functions}\\
+\normalsize{(CLRS 2.3,3)}}
+\date{}
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Review}
+
+\begin{itemize}
+\item Last time we discussed running time of algorithms and introduced the RAM model of computation. 
+     \begin{itemize}    
+     \item Best-case running time: the shortest running time for any input of size $n$
+     \item Worst-case running time:  the longest running time for any input of size $n$
+     \item Average-case running time: take the average assuming random
+       inputs (uniformly distributed); this may not be a good
+       indication of average time in practice, because inputs are
+       rarely uniform.
+     \end{itemize}
+\item We discussed insertion sort.
+\item We discussed proof of correctness of insertion sort using loop
+invariant.
+\item We analyzed the running time of insertion sort in the RAM model.
+     \begin{itemize}
+     \item Best-case: $k_1n-k_2$.
+     \item Worst-case (and average case): $k_3n^2+k_4 n -k_5$
+     \end{itemize}
+\item We discussed how we are normally only interested in growth of
+     running time: 
+  \begin{itemize} 
+  \item Best-case: \emph{linear} in $n$ ($\sim n$)
+  \item worst-case: \emph{quadratic} in $n$ ($\sim n^2$).
+  \end{itemize}
+\end{itemize}
+
+\begin{exercise} (2.2.4-CLRS) How can you modify almost any algorithm
+to have a good best-case running time?
+\end{exercise}
+\begin{solution}
+\end{solution}
+
+
+\section{Today}
+\begin{itemize}
+\item Define formally the {bf rate of growth} of a function
+\item Find the rate of growth of standard functions
+\item Algorithms matter!
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Asymptotic Growth}
+
+When we discussed Insertion Sort, we did a precise analysis of the
+running time and found that the worst-case is $k_3n^2 +k_4 n
+-k_5$. The effort to compute all terms and the constants in front of
+the terms is not really worth it, because for large input the running
+time is dominated by the term $n^2$.
+%
+Another good reason for not caring about constants and lower order
+terms is that the RAM model is not completely realistic anyway (not
+all operations cost the same).
+
+$$k_3n^2 +k_4 n - k_5 \sim n^2$$
+
+Basically, we look at the running time of an algorithm when the input size $n$ is large enough so that constants and lower-order terms do not matter.  This is called {\bf aymptotic analysis of algorithms}. 
+
+Now we would like to formalize this idea (It is easy to see that $n+2
+\sim n$, or that $4n^2 + 3n +10 \sim n^2$. But how about more
+complicated functions? say $n^n + n! + n ^{\log \log n} + n^{1/log n}$).
+
+
+$\Downarrow$
+
+\begin{itemize}
+\item We want to express {\bf rate of growth} of a function:
+  \begin{itemize}
+  \item the dominant term with respect to $n$
+  \item ignoring constants in front of it
+  \end{itemize}
+
+  \fbox{
+  \parbox{8cm}{$k_1n+k_2 \sim n$\\
+  $k_1n\log n \sim n\log n$\\
+  $k_1n^2+k_2n+k_3 \sim n^2$
+  }
+  }
+\item We also want to formalize that a e.g. $n\log n$ algorithm is better
+than a $n^2$ algorithm.
+\end{itemize}
+
+
+
+$\Downarrow$
+
+\begin{itemize}
+\item $O$-notation (Big-$O$)
+\item $\Omega$-notation
+\item $\Theta$-notation
+
+\item you have probably seen it intuitively defined but we will now
+  define it more carefully.
+\end{itemize}
+
+
+
+
+
+\newpage
+\subsection{$O$-notation (Big-$O$)}
+
+\fbox{
+\parbox{11cm}{
+$O(g(n))=\{f(n): \exists ~c,n_0>0$ such that $f(n)\leq cg(n) ~\forall n\geq
+n_0\}$
+
+\begin{itemize}
+\item $O(\cdot)$ is used to asymptotically {\em upper bound} a function.
+\end{itemize}
+
+We think of $f(n) \in O(g(n))$ as corresponding to $f(n)\leq g(n)$.
+}}
+
+
+\includegraphics[width=8cm]{bigO.pdf}
+
+
+
+Examples: 
+\begin{itemize}
+\item $1/3n^2-3n\in O(n^2)$ because $1/3n^2-3n\leq cn^2$ if $c\geq
+  1/3-3/n$ which holds for $c=1/3$ and $n>1$.
+  
+\item $k_1n^2+k_2n+k_3\in O(n^2)$ because
+  $k_1n^2+k_2n+k_3<(k_1+|k_2|+|k_3|)n^2$ and for $c>k_1+|k_2|+|k_3|$
+  and $n\geq1$, $k_1n^2+k_2n+k_3<cn^2$.
+  
+\item $k_1n^2+k_2n+k_3\in O(n^3)$ as
+$k_1n^2+k_2n+k_3<(k_1+k_2+k_3)n^3$ 
+
+\item $f(n) = n^2/3 -3n$, $g(n) = n^2$ 
+    \begin{itemize}
+    \item $f(n) \in O(g(n))$
+    \item  $g(n) \in O(f(n))$
+    \end{itemize}
+\item $f(n) = an^2 + bn +c$, $g(n) = n^2$
+    \begin{itemize}
+    \item $f(n) \in O(g(n))$
+    \item  $g(n) \in O(f(n))$
+    \end{itemize}
+\item $f(n) = 100n^2$, $g(n) = n^2$
+    \begin{itemize}
+    \item $f(n) \in O(g(n))$
+    \item  $g(n) \in O(f(n))$
+    \end{itemize}
+\item $f(n) = n, g(n) = n^2$
+    \begin{itemize}
+    \item $f(n) \in O(g(n))$
+        \end{itemize}
+\end{itemize}
+
+
+
+
+Note: $O(\cdot)$ gives an upper bound of $f$, but not necessarilly
+tight:
+\begin{itemize}
+\item  $n \in O(n)$,   $n \in O(n^2)$,  $n\in O(n^3)$,  $n \in O(n^{100})$
+\end{itemize}
+
+
+
+
+
+\subsection{$\Omega$-notation (big-Omega)}
+
+\fbox{
+\parbox{10.5cm}{
+$\Omega(g(n))=\{f(n): \exists ~c,n_0>0$ such that $cg(n)\leq f(n) ~\forall
+n\geq n_0\}$
+
+\begin{itemize}
+\item $\Omega(\cdot)$ is used to asymptotically {\em lower bound} a
+function.
+\end{itemize}
+}
+}
+
+We think of $f(n) \in \Omega(g(n))$ as corresponding to $f(n)\geq g(n)$.
+
+\includegraphics[width=8cm]{bigOmega.pdf}
+
+
+Examples:
+  \begin{itemize}
+  \item $1/3n^2-3n \in \Omega(n^2)$ because $1/3n^2-3n\geq cn^2$ if $c\leq 1/3-3/n$
+  which is true if $c=1/6$ and $n>18$.
+  \item $k_1n^2+k_2n+k_3 \in \Omega(n^2)$.
+  \item $k_1n^2+k_2n+k_3 \in \Omega(n)$ (lower bound!)
+
+
+\item $f(n) = n^2/3 -3n$, $g(n) = n^2$ 
+    \begin{itemize}
+    \item $f(n) \in \Omega(g(n))$
+    \item  $g(n) \in \Omega(f(n))$
+    \end{itemize}
+\item $f(n) = an^2 + bn +c$, $g(n) = n^2$
+    \begin{itemize}
+    \item $f(n) \in \Omega(g(n))$
+    \item  $g(n) \in \Omega(f(n))$
+    \end{itemize}
+\item $f(n) = 100n^2$, $g(n) = n^2$
+    \begin{itemize}
+    \item $f(n) \in \Omega(g(n))$
+    \item  $g(n) \in \Omega(f(n))$
+    \end{itemize}
+\item $f(n) = n, g(n) = n^2$
+    \begin{itemize}
+    \item  $g(n) \in \Omega(f(n))$
+    \end{itemize}
+  \end{itemize}
+
+
+Note: $\Omega(\cdot)$ gives a lower bound of $f$, but not necessarilly
+tight:
+\begin{itemize}
+\item  $n \in \Omega(n)$,  $n^2 \in \Omega(n)$,  $n^3 \in \Omega(n)$,  $n^{100} \in \Omega(n)$
+\end{itemize}
+
+
+
+\subsection{$\Theta$-notation (Big-Theta)}
+
+\fbox{  
+\parbox{13cm}{
+$\Theta(g(n))=\{f(n): \exists ~c_1,c_2,n_0>0$ such that $c_1g(n)\leq
+f(n)\leq c_2g(n) ~\forall n\geq n_0\}$
+
+\begin{itemize}
+\item $\Theta(\cdot)$ is used to asymptotically {\em tight bound} a function.
+\end{itemize}
+}
+}
+
+We think of $f(n)\in \Theta(g(n))$ as corresponding to $f(n)=g(n)$.
+
+\includegraphics[width=8cm]{bigTheta.pdf}
+
+\vspace{.5cm}
+
+\fbox{
+\parbox{11cm}{
+$f(n)=\Theta(g(n))$ {\em if and only if} $f(n)=O(g(n))$ and
+$f(n)=\Omega(g(n))$
+}
+}
+
+It is easy to see (try it!) that:
+\begin{theorem}
+If $f(n) \in O(g(n))$ and $f(n) \in \Omega(g(n))$ then $f(n) \in
+\Theta (g(n))$.
+\end{theorem}
+
+
+Examples:
+  \begin{itemize}
+  \item $k_1n^2+k_2n+k_3 \in \Theta(n^2)$
+  \item {\em worst case} running time of insertion-sort is $\Theta(n^2)$
+  \item $6n\log n+\sqrt{n}\log^2 n \in \Theta(n\log n)$:
+    \begin{itemize}
+    \item We need to find $n_0, c_1, c_2$ such that $c_1n\log n\leq
+    6n\log n+\sqrt{n}\log^2 n\leq c_2n\log n$ for $n>n_0$
+
+    $c_1n\log n\leq 6n\log n+\sqrt{n}\log^2 n \Rightarrow c_1\leq
+    6+\frac{\log n}{\sqrt{n}}$. Ok if we choose $c_1=6$ and $n_0=1$.
+
+    $6n\log n+\sqrt{n}\log^2 n\leq c_2n\log n \Rightarrow
+    6+\frac{\log n}{\sqrt{n}}\leq c_2$. Is it ok to choose $c_2=7$? Yes, $\log
+    n\leq \sqrt{n}$ if $n\geq 2$.
+    \item So $c_1=6$, $c_2=7$ and $n_0=2$ works.
+    \end{itemize}
+\item $n^2/3 -3n \in O(n^2), n^2/3 -3n \in \Omega(n^2) \longrightarrow
+n^2/3 -3n \in \Theta(n^2)$
+
+\item $a n^2 +bn +c \in O(n^2), a n^2 +bn +c \in \Omega(n^2)
+\longrightarrow a n^2 +bn +c \in \Theta(n^2)$
+
+\item $n \neq \Theta(n^2)$
+
+\item $f(n) = 6n \lg n + \sqrt n \lg^n$, $g(n) = n \lg n$
+\end{itemize}
+
+
+
+
+
+
+\section{Growth Rate of Standard Functions}
+
+\begin{itemize}
+\item Polynomial of degree $d$: 
+$$p(n)=\sum_{i=1}^d a_i\cdot n^i = \Theta(n^d)$$ where $a_1, a_2,
+  \dots, a_d$ are constants (and $a_d>0$).
+ 
+\item Any polylog grows slower than any polynomial.  
+$$\log ^a n = O(n^b), \forall a>0$$
+
+\item Any polynomial grows slower than any exponential with base $c>1$. 
+$$n^b = O(c^n), \forall b>0, c>1$$
+
+\end{itemize}
+
+
+
+Last time we looked at the problem of comparing functions (running times). 
+
+$$3n^2 \lg n + 2n +1 \textrm{  vs.  } 1000 n \lg^{10}n + n \lg n +5$$
+
+Basically, we want to quantify how fast a function grows when $n
+\longrightarrow \infty$.
+
+$\Downarrow$
+
+{\bf asymptotic} analysis of algorithms\\
+
+More precisely, we want to compare 2 functions (running times) and
+tell which one is larger (grows faster) than the other.  We defined
+$O, \Omega, \Theta$:
+
+\begin{center}
+\includegraphics[height=3cm]{bigO.pdf}
+\end{center}
+
+\begin{center}
+\fbox{
+\parbox{10cm}{
+\begin{itemize}
+\item $f$ is below $g$ $\Leftrightarrow$ $f \in O(g)$ $\Leftrightarrow$ $f \le g$
+\item $f$ is above $g$ $\Leftrightarrow$ $f \in \Omega(g)$ $\Leftrightarrow$ $f \ge g$
+\item $f$ is both above and below $g$ $\Leftrightarrow$ $f \in \Theta(g)$ $\Leftrightarrow$ $f = g$
+\end{itemize}
+}}
+\end{center}
+
+\vspace{\baselineskip}
+Example: Show that $2n^2 +3n +7 \in O(n^2)$
+
+\vspace{\baselineskip}
+ Upper and lower bounds are symmetrical: If $f$ is upper-bounded by
+$g$ then $g$ is lower-bounded by $f$ and we have:
+$$f \in O(g) \Leftrightarrow g \in \Omega(f)$$
+(Proof: $f \le c \cdot g \Leftrightarrow g \ge \frac{1}{c} \cdot f$). Example: 
+$n \in O(n^2)$ and $n^2 \in \Omega(n)$\\
+
+
+An $O()$ upper bound is not a tight bound.  Example: \\ 
+$2n^2 + 3n +5 \in O(n^{100})$\\ 
+$2n^2 +3n +5 \in O(n^{50})$\\ 
+$2n^2 + 3n +5 \in O(n^3)$ \\ 
+$2n^2 + 3n +5 \in O(n^2)$ 
+
+Similarly, an $\Omega()$ lower bound is not a tight bound. Example: \\
+$2n^2 + 3n +5 \in \Omega(n^2)$\\
+$2n^2 + 3n +5 \in \Omega(n \log n)$ \\ 
+$2n^2 + 3n +5 \in \Omega(n)$\\ 
+$2n^2 + 3n +5 \in \Omega(\lg n)$\\
+
+
+
+An asymptotically {\bf tight} bound for $f$ is a function $g$ that is
+ equal to $f$ up to a constant factor: $c_1 g \le f \le c_2 g, \forall
+ n \ge n_0$. That is, $f \in O(g)$ and $f \in \Omega(g)$.\\
+
+
+Some properties: 
+\begin{itemize}
+\item $f = O(g) \Leftrightarrow g = \Omega(f)$
+\item $f = \Theta(g) \Leftrightarrow g = \Theta(f)$
+\item reflexivity: $f = O(f), f=\Omega(f), f=\Theta(f)$
+\item transitivity: $f = O(g), g=O(h) \longrightarrow f=O(h)$
+\end{itemize}
+
+
+ The growth of two functions $f$ and $g$ can be found by computing the
+limit $lim_{n \longrightarrow \infty}\frac{f(n)}{g(n)}$. Using the
+definition of $O,\Omega, \Theta$ it can be shown that :
+\begin{itemize}
+
+\item if $lim_{n \longrightarrow \infty}\frac{f(n)}{g(n)} = 0 $: then
+intuitively $f<g$ $\Longrightarrow$ $f = O(g)$ and $f \neq \Theta (g)$.
+
+\item if  $lim_{n \longrightarrow \infty} \frac{f(n)}{g(n)} = \infty $: then
+intuitively $f>g$ $\Longrightarrow$ $f = \Omega(g)$ and $f \neq \Theta (g)$.
+
+\item if  $lim_{n \longrightarrow \infty}\frac{f(n)}{g(n)} = c, c>0$:  then intuitively $f=c \cdot g$ $\Longrightarrow$ $f = \Theta(g)$.
+\end{itemize}
+This property will be very useful when doing exercises.
+
+
+
+\newpage
+\section{Algorithms matter!}
+
+Sort 10 million integers on 
+\begin{itemize}
+\item 1 GHZ computer (1000 million instructions per second) using $2n^2$
+algorithm.
+    \begin{itemize} 
+    \item $\frac{2\cdot(10^7)^2~inst.}{10^9~inst.~per~second} =
+    200000$ seconds $\approx 55$ hours.  
+    \end{itemize}
+
+\item 100 MHz computer (100 million instructions per second)
+using $50n\log n $ algorithm.
+\begin{itemize} 
+\item $\frac{50\cdot10^7\cdot \log 10^7~inst.}{10^8~ inst.~per~second}
+< \frac{50\cdot10^7\cdot 7\cdot 3}{10^8} = 5\cdot 7\cdot 3 = 105$
+seconds.
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+
+\section{Comments}
+
+\begin{itemize}
+\item The correct way to say is that $f(n) \in O(g(n))$.  Abusing
+notation, people normally write $f(n) = O(g(n))$.
+
+$$3n^2 + 2n + 10 = O(n^2), n=O(n^2), n^2 = \Omega(n), n\log n = \Omega(n), 2n^2 +3n = \Theta(n^2)$$
+
+  \item When we say ``the running time is $O(n^2)$'' we mean that the
+  worst-case running time is $O(n^2)$ --- best case might be better.
+
+  \item When we say ``the running time is $\Omega(n^2)$'', we mean that the
+  {\em best case} running time is $\Omega(n^2)$ --- the worst case might be
+  worse.
+
+  \item Insertion-sort:
+  \begin{itemize}
+  	\item Best case: $\Omega(n)$
+  	\item Worst case: $O(n^2)$
+	\item We can also say that worst case is $\Theta(n^2)$ because there exists an input for which insertion sort takes $\Omega(n^2)$. Same for best case. 
+	\item 	Therefore the running time is $\Omega(n)$ and $O(n^2)$. 
+	\item But, we cannot say that the running time of insertion sort is $\Theta(n^2)$!!!
+ \end{itemize}
+
+
+  \item Use of $O$-notation makes it much easier to analyze
+  algorithms; we can easily prove the $O(n^2)$ insertion-sort time
+  bound by saying that both loops run in $O(n)$ time.
+
+  \item We often use $O(n)$ in equations and recurrences:
+    e.g. $2n^2+3n+1=2n^2+O(n)$ (meaning that $2n^2+3n+1=2n^2+f(n)$
+    where $f(n)$ is some function in $O(n)$).  
+
+\item We use $O(1)$ to denote constant time.
+
+\item One can also define $o$ and $\omega$ (little-oh and little-omega):
+     \begin{itemize}
+     \item $f(n)=o(g(n))$ corresponds to $f(n)<g(n)$
+     \item $f(n)=\omega(g(n))$ corresponds to $f(n)>g(n)$
+     \item we will not use them; we'll aim for tight bounds $\Theta$.	
+     \end{itemize}
+
+\item Not all functions are asymptotically comparable! There exist
+functions $f,g$ such that $f$ is not $O(g)$, $f$ is not $\Omega(g)$
+(and $f$ is not $\Theta(g)$).
+\end{itemize}
+
+
+
+\newpage
+\section{Review of Log and Exp}
+\begin{itemize}
+\item Base 2 logarithm comes up all the time (from now on we will always
+mean $\log_2 n$ when we write $\log n$ or $\lg n$).
+ \begin{itemize}
+ \item Number of times we can divide $n$ by 2 to get to 1 or less.
+ \item Number of bits in binary representation of $n$.
+ \item Inverse function of $2^n=2\cdot 2\cdot 2 \cdots 2$ ($n$ times).
+ \item Way of doing multiplication by addition: $\log(ab)=\log(a)+\log(b)$
+\item Note: $\log n << \sqrt{n} << n$
+
+ \end{itemize}
+\item Properties:
+
+ \begin{itemize}
+\item $\lg ^k n = (\lg n)^k$
+\item $\lg \lg n = \lg (\lg n)$
+\item $a ^ {\log_b c} = c^{\log_b a}$
+\item $a^{\log_a b} = b$
+\item $\log_a n = \frac{\log_b n}{\log_b a}$
+\item $\lg b^n = n \lg b$
+\item $\lg xy = \lg x + \lg y$
+\item $\log_a b = \frac{1}{\log_b a}$ 
+\end{itemize}
+\end{itemize}
+
+
+
+\end{document}

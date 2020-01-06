@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+
+
+\begin{document}
+
+CSCI 3104-300 Summer 2019 \hfill Problem Set 1\\
+Ryan Hoffman (06/07/2019)
+
+\hrulefill
+
+\begin{enumerate}
+
+	\item	\textit{You might consider writing the text of the problem you are solving here, in italics, so that both you and the course staff know exactly what problem you are solving. Be sure that you solve the problems in order.}
+
+	You can then put your solutions here.
+
+	If you're solving a series of subproblems, you would demarcate them like this:
+	\begin{enumerate}
+	\item \textit{The first subproblem}
+
+	And your solution.
+
+	\item \textit{The second subproblem}
+
+	And its solution. If you need to do some math, try using the {\tt align} environment, like this:
+	%
+	\begin{align}
+	T(n) & = n+c \nonumber \\
+	& = \Theta(n) \enspace ,
+	\end{align}
+	%
+	although there are other ways to display math, including inline like this $T(n)=\Theta(n)$.
+
+	\end{enumerate}
+
+	And, here is a page break so that the next problem begins on a fresh page.
+
+	\newpage
+
+	\item \textit{Here is another problem.}
+
+	And another solution. If you need to write pseudocode, use the {\tt verbatim} environment:
+	%
+	\begin{verbatim}
+	collatz(n) {
+	    if n<1  { return 'Try a natural number n>0' }
+	    if n==1 { return 'YES!' }
+	    if isodd(n) {
+	       collatz(3n+1)
+	    } else {
+	       collatz(n/2)
+	    }
+	}
+	\end{verbatim}
+	%
+	in which exactly what you write is displayed, including whitespace.
+
+
+\end{enumerate}
+
+
+\end{document}

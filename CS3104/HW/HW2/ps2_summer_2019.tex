@@ -1,0 +1,150 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[]{algorithmicx}
+\usepackage[bottom]{footmisc}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\lhead{{\bf CSCI 3104: Algorithms \\ Problem Set 2} }
+\rhead{{\bf Instructor\ Buxton \\ Summer 2019, CU-Boulder}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% 10+25+30+15+20 = 100 points possible
+
+\begin{enumerate}
+
+	% EASY PROBLEM
+	\item	(10 points) For each of the following claims, determine whether they are true or false. Justify your determination (show your work). If the claim is false, state the correct asymptotic relationship as $O$, $\Theta$, or $\Omega$. Unless otherwise specified, lg is $log_2$.
+
+	\begin{tabular}{rrcl}
+	\vspace{1mm}(a) & $n+1$& $=$ & $O(n^{4})$ \\ % true
+	\vspace{1mm}(b) & $2^{2n}$& $=$ & $O(2^{n})$  \\ % false, Omega
+	\vspace{1mm}(c) & $2^{n}$& $=$ & $\Theta(2^{n+7})$  \\  % true
+	\vspace{1mm}(d) & $1$& $=$ & $O(1/n)$   \\ % false, Omega
+	\vspace{1mm}(e) & $\ln^{2}n$& $=$ & $\Theta(\lg^{2}n)$  \\ % true
+	\vspace{1mm}(f) & $n^{2}+2n-4$& $=$ & $\Omega(n^{2})$ \\ % false, Theta
+	\vspace{1mm}(g) & $3^{3n}$& $=$ & $\Theta(9^{n})$  \\ % true
+	\vspace{1mm}(h) & $2^{n+1}$& $=$ & $\Theta(2^{n\lg n})$  \\  % false, O
+	\vspace{1mm}(i) & $\sqrt{n}$& $=$ & $O(\lg n)$   \\ % false, Omega
+	\vspace{1mm}(j) & $10^{100}$& $=$ & $\Theta(1)$  \\ % true
+%	(c) & $n^{n}$& $=$ & $o(n!)$  \\  % false
+%	(d) & $1/(3n)$& $=$ & $o(1)$   \\ % true
+	\end{tabular}
+
+    \pagebreak
+    
+    % HARD PROBLEM
+	\item (25 points) Asymptotic relations like $O$, $\Omega$, and $\Theta$ represent 
+	relationships between \textit{functions}, and these relationships are transitive. 
+	That is, if some $f(n)=\Omega(g(n))$, and $g(n)=\Omega(h(n))$, then it is also true 
+	that $f(n)=\Omega(h(n))$. This means that we can sort \textit{functions} by their asymptotic growth.%
+    %
+	\footnote{The notion of sorting is entirely general:\ so long as you can define a pairwise comparison operator for a set of 
+	objects $\mathcal{S}$ that is transitive, then you can sort the things in $\mathcal{S}$. For instance, for strings, we use a 
+	comparison based on lexical ordering to sort them. Furthermore, we can use any sorting algorithm to sort $\mathcal{S}$, by 
+	simply changing the comparison operators $>$, $<$, etc.\ to have a meaning appropriate for $\mathcal{S}$. 
+	For instance, using $\Omega$, $O$, and $\Theta$, you could apply QuickSort or MergeSort to the functions here to obtain the 
+	sorted list.}
+    
+    Sort the following {\em functions} by order of asymptotic growth such that the final arrangement of functions $g_{1},g_{2},\dots,g_{12}$ satisfies the ordering constraint $g_{1}=\Omega(g_{2})$, $g_{2}=\Omega(g_{3})$, $\dots$, $g_{11}=\Omega(g_{12})$.
+    
+    \begin{center}
+    	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|} % 12 functions
+    		\hline
+    		& & & & & & & & & & & \\
+    		$n$ & $n^{2}$  & $(\sqrt{2})^{\lg n}$ & $2^{\lg n}$ & $n!$ & $(\lg n)!$ & $\left(\frac{3}{2}\right)^{n}$ & $n^{1/\lg n}$ & $n \lg n$ & $\lg(n!)$ & ${\rm e}^{n}$ & 42 \\
+    		& & & & & & & & & & & \\
+    		\hline
+    	\end{tabular}
+    \end{center}
+    
+    Give the final sorted list and identify which pair(s) functions $f(n),g(n)$, if any, are in the same equivalence class, i.e., $f(n)=\Theta(g(n))$.
+
+    \pagebreak
+
+	
+	% MEDIUM PROBLEM
+	\item (30 points) Professor Dumbledore needs your help optimizing the Hogwarts budget. You'll be given an array $A$ of exchange rates for muggle money and wizard coins, expressed as integers. Your task is to help Dumbledore maximize the payoff by buying at some time $i$ and selling at a future time $j > i$, such that both $A[j] > A[i]$ and the corresponding difference of $A[j]-A[i]$ is as large as possible.
+	
+	For example, let $A=[8, 9, 3, 4, 14, 12, 15, 19, 7, 8, 12, 11]$. If we buy one stock at time $i=2$ (assuming $0$ indexing) with $A[i]=3$ and $j=7$ with $A[j]=19$, Hogwarts gets an income of $19-3=16$ coins.
+	
+	\begin{enumerate}
+	\item \label{stocks:a} Consider the pseudocode below that takes as input an array $A$ of size $n$:
+	\begin{small}
+	\begin{verbatim}
+	makeWizardMoney(A) : 
+	    maxProfitSoFar = 0
+	    for i = 0 to length(A)-1 {
+	        for j = i+1 to length(A) {
+	            coins = A[j] - A[i]
+	            if (coins > maxProfitSoFar) { maxProfitSoFar = coins }
+	    }}
+	    return maxProfitSoFar
+	\end{verbatim}
+	\end{small}
+	What is the running time complexity of the procedure above? Write your answer as a $\Theta$ bound in terms of $n$.
+	
+	\item \label{stocks:b} Explain (1--2 sentences) under what conditions on the contents of $A$ the {\tt makeWizardMoney} algorithm will return 0 gold.
+	
+	\item \label{stocks:c} Professor Dumbledore knows you know that {\tt makeWizardMoney} is wildly inefficient. He suggests you write a function to make a new array $M$ of size $n$ such that
+	\begin{align}
+	M[i] = \min_{0\,\leq\, j\, \leq \,i} ~A[j] \nonumber \enspace .
+	\end{align}
+	That is, $M[i]$ gives the minimum value in the subarray of $A[0 .. i]$.
+	
+	What is the running time complexity of the pseudocode to create the array $M$? Write your answer as a $\Theta$ bound in terms of $n$.
+	
+	\item \label{stocks:d} Use the template code provided and implement the function described in \eqref{stocks:c} to compute the maximum coin difference in time $\Theta(n)$.
+	
+	\item \label{stocks:e} Use the template code provided to determine and compare the runtimes for the functions in 2a and 2d. Explain your findings.
+	
+	\end{enumerate}
+
+	\pagebreak
+
+ 	% MEDIUM PROBLEM
+ 	\item (15 points) Consider the problem of finding the maximum element in a given array. The input is a sequence of $n$ numbers $A=\langle a_{1},a_{2},\dots,a_{n}\rangle$. The output is an index $i$ such that $a_{i} \geq a_{1} \geq a_{2} \geq ... \geq a_{n}$.
+	
+ 	\begin{enumerate}
+ 	\item Write pseudocode for a simple maximum element search algorithm, which will scan through the input sequence $A$, and return the index of the last occurrence of the maximum element.
+ 	\item Using a loop invariant, prove that your algorithm is correct. Be sure that your loop invariant and proof covers the initialization, maintenance, and termination conditions.
+ 	\end{enumerate}
+	
+	\newpage
+	
+	% HARD PROBLEM
+	\item (20 points) Crabbe and Goyle are arguing about binary search. Goyle writes the following pseudocode on the board, which he claims implements a binary search for a target value {\tt v} within an input array {\tt A} containing $n$ elements sorted in ascending order.
+	\begin{small}
+	\begin{verbatim}
+	bSearch(A, v) {
+	   return binarySearch(A, 1, n-1, v)
+	}
+	
+	binarySearch(A, l, r, v) {
+	   if l <= r then return -1
+	   m = floor( (l + r)/2 )
+	   if A[m] == v then return m
+	   if A[m] > v then
+	     return binarySearch(A, m+1, r, v)
+	     else return binarySearch(A, l, m-1, v)
+	\end{verbatim}
+	\end{small}
+	
+	\begin{enumerate}
+	\item Help Crabbe determine whether this code performs a correct binary search. If it does, prove to Goyle that the algorithm is correct. If it does not, state the bug(s), fix the line(s) of code that are incorrect, and then prove to Goyle that your fixed algorithm is correct.
+	\item Goyle tells Crabbe that binary search is efficient because, at worst, it divides the remaining problem size in half at each step. In response Crabbe claims that four-nary search, which would divide the remaining array $A$ into fourths at each step, would be \textit{way more} efficient asymptotically. Explain who is correct and why.
+	\end{enumerate}
+
+\end{enumerate}
+
+\end{document}
